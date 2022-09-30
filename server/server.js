@@ -6,8 +6,7 @@ const cors = require('cors');
 const fileUpload = require('express-fileupload');
 const fs = require('fs');
 const sharp = require('sharp');
-// const uploadImg = require('./util/uploadImg');
-// const admZip = require('zip')
+const AdmZ = require('adm-zip');
 
 const app = express();
 
@@ -55,21 +54,30 @@ app.post('/postImg', async (req, res) => {
     const { size } = fs.statSync(dirPath + fileName);
     response[fileName.split('.webp')[0]] = { size };
   });
-
-  console.log('success saved');
   res.send({ id, data: response });
 });
 
-app.get('/getImg/:id', (req, res) => {
+app.get('/getImg/:dirId/:id', (req, res) => {
+  const { dirId } = req.params;
   const { id } = req.params;
-  console.log(id);
-  const filePath = `${__dirname}/uploads/${id}/0.webp`;
-  res.download(filePath, '0.webp', (err) => {
-    if (err) {
-      console.log(err);
-    }
-    console.log('succ');
-  });
+  if (id !== 'null') {
+    const filePath = `${__dirname}/uploads/${dirId}/${id}.webp`;
+    res.download(filePath);
+    res.send({ status: true, msg: 'successfully download' });
+  } else {
+    const zip = new AdmZ();
+    const dirPath = `${__dirname}/uploads/${dirId}/`;
+    const dirData = fs.readdirSync(dirPath);
+    dirData.forEach((fileName) => {
+      zip.addLocalFile(dirPath + fileName);
+    });
+    const data = zip.toBuffer();
+    const finalNameAfterDl = 'downloaded_file.zip';
+    res.set('Content-Type', 'application/octet-stream');
+    res.set('Content-Disposition', `attachment; filename=${finalNameAfterDl}`);
+    res.set('Content-Length', data.length);
+    res.send(data);
+  }
 });
 
 app.get('*', (req, res) => {

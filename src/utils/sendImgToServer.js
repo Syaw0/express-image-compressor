@@ -3,14 +3,17 @@ import { nanoid } from 'nanoid';
 import mainStore from '../store/mainStore';
 
 const sendImgToServer = async () => {
+  const errMsg = { status: false, msg: 'error' };
   try {
     const { files } = mainStore.getState();
     const formData = new FormData();
     const idListed = Object.keys(files);
+    const uniqId = nanoid();
+    mainStore.setState((state) => ({ ...state, dirUniqId: uniqId }));
     for (let i = 0; i !== idListed.length; i += 1) {
       formData.append(idListed[i], files[idListed[i]].file);
     }
-    formData.append('id', nanoid());
+    formData.append('id', uniqId);
 
     const response = await fetch('http://localhost:8080/postImg', {
       method: 'POST',
@@ -24,28 +27,37 @@ const sendImgToServer = async () => {
         data: json,
       };
     }
-    return {
-      status: false,
-      msg: 'error',
-    };
-
-  //   if (json.id) {
-  //     getImages(json.id);
-  //   }
+    return errMsg;
   } catch (err) {
-    return {
-      status: false,
-      msg: 'error',
-    };
+    return errMsg;
   }
 };
 
-const getImages = async (id) => {
-  console.log(id);
-  const response = await fetch(`http://localhost:8080/getImg/${id}`);
-//   console.log(response)
-  // const json = await response.json();
-  // console.log(json)
+const getImage = async (dirId, id) => {
+  try {
+    const response = await fetch(`http://localhost:8080/getImg/${dirId}/${id}`);
+    const data = await response.json();
+    if (data.status) {
+      return true;
+    }
+    return false;
+  } catch (err) {
+    return false;
+  }
+};
+
+const getAllImages = async (dirId) => {
+  try {
+    const response = await fetch(`http://localhost:8080/getImg/${dirId}/null`);
+    const data = await response.json();
+    if (data.status) {
+      return true;
+    }
+    return false;
+  } catch (err) {
+    return false;
+  }
 };
 
 export default sendImgToServer;
+export { getAllImages, getImage };

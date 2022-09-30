@@ -3,6 +3,7 @@
 import React from 'react';
 import mainStore from '../store/mainStore';
 import Flex from '../styles/styledComponents/flex';
+import { getImage } from '../utils/sendImgToServer';
 import ImageBox from './imageBox';
 
 function SelectedImage({ type }) {
@@ -15,7 +16,14 @@ function SelectedImage({ type }) {
   };
 
   const downloadHandler = (e) => {
-    console.log('download', e.target.parentNode.id);
+    const imgId = e.target.parentNode.id;
+    const dirId = mainStore.getState().dirUniqId;
+    const result = getImage(dirId, imgId);
+    if (result) {
+      console.log('successfully');
+    } else {
+      console.log('failed');
+    }
   };
 
   return (
