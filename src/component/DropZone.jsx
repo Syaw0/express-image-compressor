@@ -3,6 +3,7 @@ import { nanoid } from 'nanoid';
 import React from 'react';
 import mainStore from '../store/mainStore';
 import Flex from '../styles/styledComponents/flex';
+import Text from '../styles/styledComponents/text';
 import checkInsertLimitation from '../utils/checkInsertLimitation';
 import disableDefaultDropBehavior from '../utils/disableDefaultDropBehavior';
 import supportedFiles from '../utils/supportedFiles';
@@ -13,12 +14,18 @@ function DropZone() {
   const insertFile = mainStore((state) => state.insertFile);
   const insertLimit = mainStore((state) => state.insertLimit);
   const storeFiles = mainStore((state) => state.files);
+  const appState = mainStore((state) => state.appState);
 
-  const handleDrags = () => {
-    console.log('draged');
+  const handleDrags = (e) => {
+    const target = e.currentTarget;
+    target.style.backgroundColor = 'RGBA(47, 234, 168, 0.5)';
+    target.ondragleave = () => {
+      target.style.backgroundColor = 'RGBA(47, 234, 168, 0.3)';
+    };
   };
 
   const handleDrops = async (e) => {
+    e.currentTarget.style.backgroundColor = 'RGBA(47, 234, 168, 0.3)';
     const { files } = e.dataTransfer;
     const fileList = {};
     const insertedIndex = files.length + Object.keys(storeFiles).length - insertLimit;
@@ -41,24 +48,51 @@ function DropZone() {
     }
   };
 
+  let additionalState = {};
+  if (appState === 'download' || appState === 'sendToServer') {
+    additionalState = {
+      backgroundColor: 'rgba(208, 208, 208,0.5)',
+      opacity: '0.2',
+      cursor: 'no-drop',
+      '& p': {
+        cursor: 'no-drop',
+      },
+    };
+  }
+
   return (
     <Flex
       justify="center"
       align="center"
       css={{
-        width: '80%',
-        height: '5rem',
+        width: '100%',
+        height: '8rem',
+        '@bp4': {
+          height: '5rem',
+        },
         borderRadius: '10px',
         margin: '$2 0',
         headline4: '500',
         color: '$primary',
-        backgroundColor: '$EasyDif300',
-        border: '2px dashed $primary',
+        backgroundColor: 'RGBA(47, 234, 168, 0.1)',
+        opacity: '1',
+        cursor: 'drop',
+        border: '3px dashed RGBA(47, 234, 168, 0.8)',
+        ...additionalState,
       }}
       onDragOver={handleDrags}
       onDrop={handleDrops}
     >
-      Drop Here Your Files
+      <Text css={{
+        color: '#A9FFE2',
+        textAlign: 'center',
+        '@bp4': {
+          headline6: '500',
+        },
+      }}
+      >
+        Drop Here Your File Or Files Here
+      </Text>
     </Flex>
   );
 }

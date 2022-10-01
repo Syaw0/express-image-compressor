@@ -51,6 +51,11 @@ const loaderAnimation = keyframes({
   '50%': { transform: 'scaleY(2)' },
 });
 
+const rotation = keyframes({
+  '0%': { transform: 'rotate(0deg)' },
+  '100%': { transform: 'rotate(360deg)' },
+});
+
 export {
-  fadeInToBottom, fadeOutToTop, loaderAnimation, fadeIn, fadeOut,
+  fadeInToBottom, fadeOutToTop, loaderAnimation, fadeIn, fadeOut, rotation,
 };

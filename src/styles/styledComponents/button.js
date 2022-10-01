@@ -20,7 +20,7 @@ const Button = styled('button', {
   '&:disabled': {
     backgroundColor: 'rgba(50,50,50,0.2)',
     cursor: 'wait',
-    color: 'rgba(50,50,50,0.5)',
+    color: '$bg100',
     '& svg': {
       fill: 'rgba(50,50,50,0.5)',
     },

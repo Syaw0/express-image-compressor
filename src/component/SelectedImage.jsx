@@ -3,6 +3,7 @@
 import React from 'react';
 import mainStore from '../store/mainStore';
 import Flex from '../styles/styledComponents/flex';
+import makeReadableSizes from '../utils/makeReadableSizes';
 import { getImage } from '../utils/sendImgToServer';
 import ImageBox from './imageBox';
 
@@ -11,7 +12,7 @@ function SelectedImage({ type }) {
   const deleteFile = mainStore((state) => state.deleteFile);
 
   const rmHandler = (e) => {
-    const deletionFile = e.target.parentNode.id;
+    const deletionFile = e.currentTarget.parentNode.id;
     deleteFile(deletionFile);
   };
 
@@ -32,7 +33,16 @@ function SelectedImage({ type }) {
       {Object.keys(storeFiles).map((id) => {
         const fileObj = storeFiles[id];
         return (
-          <ImageBox key={id} type={type} size={type === 'download' ? fileObj.size : null} src={fileObj.base64} uId={id} rmHandler={type === 'download' ? downloadHandler : rmHandler} />
+          <ImageBox
+            key={id}
+            file={storeFiles[id].file}
+            type={type}
+            afSize={makeReadableSizes(fileObj.size)}
+            preSize={makeReadableSizes(fileObj.file.size)}
+            src={fileObj.base64}
+            uId={id}
+            rmHandler={type === 'download' ? downloadHandler : rmHandler}
+          />
         );
       })}
 

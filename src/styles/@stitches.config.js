@@ -97,9 +97,9 @@ export const {
       josef: 'Josefin Sans',
     },
     fontSizes: {
-      headline1: '36px',
-      headline2: '32px',
-      headline3: '28px',
+      headline1: '60px',
+      headline2: '50px',
+      headline3: '43px',
       headline4: '24px',
       headline5: '22px',
       headline6: '18px',
@@ -110,9 +110,9 @@ export const {
     },
 
     lineHeights: {
-      headline1: '44px',
-      headline2: '40px',
-      headline3: '36px',
+      headline1: '75px',
+      headline2: '60px',
+      headline3: '53px',
       headline4: '32px',
       headline5: '28px',
       headline6: '24px',

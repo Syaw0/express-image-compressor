@@ -25,7 +25,6 @@ app.use(fileUpload());
 
 app.get('/', (req, res) => {
   res.set({
-    // 'Content-Type' :'text/jsx',
     'X-Content-Type-Options': 'nosniff',
   });
   res.sendFile(path.join(`${__dirname}/public/index.html`));
@@ -36,6 +35,14 @@ app.post('/postImg', async (req, res) => {
   const dirPath = `${__dirname}/uploads/${id}/`;
   fs.mkdirSync(dirPath);
 
+  setTimeout(() => {
+    fs.readdirSync(dirPath).forEach((fileName) => {
+      fs.rmSync(dirPath + fileName);
+    });
+    fs.rmdirSync(dirPath);
+    // after 1h delete items and the directory in the storage
+  }, 3600000);
+
   const { files } = req;
   const fileIdListed = Object.keys(files);
 
@@ -43,7 +50,6 @@ app.post('/postImg', async (req, res) => {
     const fileId = fileIdListed[i];
     const file = files[fileId];
     const filePath = `${dirPath}/${fileId}.webp`;
-    // const result = await uploadImg(file, filePath);
     await sharp(file.data).webp({ quality: 20 }).toFile(filePath);
   }
 
