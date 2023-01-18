@@ -11,14 +11,18 @@ const AdmZ = require('adm-zip');
 const app = express();
 
 app.use(bp.json({ limit: '500mg' }));
-app.use(bp.urlencoded({ extended: true, limit: '500mg', parameterLimit: '6000000' }));
-app.use(cors({
-  origin: '*',
-  optionsSuccessStatus: '204',
-  allowedHeaders: '*',
-  methods: ['POST', 'GET', 'OPTIONS'],
-  preflightContinue: false,
-}));
+app.use(
+  bp.urlencoded({ extended: true, limit: '500mg', parameterLimit: '6000000' }),
+);
+app.use(
+  cors({
+    origin: '*',
+    optionsSuccessStatus: '204',
+    allowedHeaders: '*',
+    methods: ['POST', 'GET', 'OPTIONS'],
+    preflightContinue: false,
+  }),
+);
 
 app.use(express.static('public'));
 app.use(fileUpload());
@@ -93,5 +97,4 @@ app.get('*', (req, res) => {
   res.send('404 Error');
 });
 
-app.listen(8080, () => {
-});
+app.listen(3000, () => {});

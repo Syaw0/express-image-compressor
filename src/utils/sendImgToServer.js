@@ -1,6 +1,7 @@
 /* eslint-disable no-use-before-define */
 import { nanoid } from 'nanoid';
 import mainStore from '../store/mainStore';
+import serverUrl from './serverUrl';
 
 const sendImgToServer = async () => {
   const errMsg = { status: false, msg: 'error' };
@@ -15,10 +16,9 @@ const sendImgToServer = async () => {
     }
     formData.append('id', uniqId);
 
-    const response = await fetch('http://localhost:8080/postImg', {
+    const response = await fetch(`${serverUrl}/postImg`, {
       method: 'POST',
       body: formData,
-
     });
     const json = await response.json();
     if (json) {
@@ -35,7 +35,7 @@ const sendImgToServer = async () => {
 
 const getImage = async (dirId, id) => {
   try {
-    const response = await fetch(`http://localhost:8080/getImg/${dirId}/${id}`);
+    const response = await fetch(`${serverUrl}/getImg/${dirId}/${id}`);
     const data = await response.json();
     if (data.status) {
       return true;
@@ -48,7 +48,7 @@ const getImage = async (dirId, id) => {
 
 const getAllImages = async (dirId) => {
   try {
-    const response = await fetch(`http://localhost:8080/getImg/${dirId}/null`);
+    const response = await fetch(`${serverUrl}/${dirId}/null`);
     const data = await response.json();
     if (data.status) {
       return true;
